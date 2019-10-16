@@ -1,3 +1,5 @@
+License:
+Attribution-NonCommercial-NoDerivatives (CC BY-NC-ND) 
 # Zombie Mania Python Edition
 
 One Paragraph of project description goes here
