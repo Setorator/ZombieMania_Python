@@ -29,11 +29,13 @@ def main():
                 pygame.quit()
                 sys.exit()
 
+            # TODO: fix collision handling
             elif event.type == pygame.KEYDOWN:
-                print("KEYDOWN")
                 if event.key == pygame.K_RIGHT:
-                    print("KEYR")
-                    zombie.velocity = (v_x, None)
+                    if zombie.rect.right + zombie.velocity[0] <= width:
+                        zombie.velocity = (v_x, None)
+                    else:
+                        print("Out of right border!")
 
             elif event.type == pygame.KEYUP:
                 print("KEYUP")

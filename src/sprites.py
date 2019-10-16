@@ -1,7 +1,8 @@
 import pygame
 import glob
-import os
 
+
+# TODO: Create a move function
 class Sprite(pygame.sprite.Sprite):
     def __init__(self, pos=(100, 100), size=(64, 64)):
         super(Sprite, self).__init__()
@@ -10,13 +11,19 @@ class Sprite(pygame.sprite.Sprite):
         self._image = None
         self.rect = pygame.Rect(pos[0], pos[1], size[0], size[1])
         self._velocity = [0, 0]
+        window_size = w_width, w_height = 640, 480
 
     def update(self):
         self._index += 1
         if self._index >= len(self._images):
             self._index = 0
         self._image = self._images[self._index]
+        self.move()
+
+    def move(self):
+        # This method should be overloaded by others who want different movements
         self.rect.move_ip(self._velocity[0], self._velocity[1])
+
 
     def load_images(self, folder_path):
         paths = glob.glob(folder_path, recursive=True)
