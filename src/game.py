@@ -1,6 +1,7 @@
 import sys
 import pygame
 from zombiemania.src.zombie import Zombie
+import zombiemania.src.map_builder as mb
 
 
 def main():
@@ -8,6 +9,9 @@ def main():
     window_size = width, height = 640, 480
     velocity = v_x, v_y = [2, 2]
     black = 0, 0, 0
+
+    # Extract maps
+    maps = mb.extract_all_maps()
 
     # Init game
     pygame.init()
