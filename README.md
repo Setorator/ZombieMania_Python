@@ -25,7 +25,7 @@ A step by step series of examples that tell you how to get a development env run
 1. Open PyCharm and create a new project with a virtual environment
 ![New_Proj](https://user-images.githubusercontent.com/18465126/66916419-750bc680-f01b-11e9-8b67-d695f13b38b6.PNG)
 
-2. Right-click on the new project folder and select "New"->"Python Package" and name it "zombiemania"
+2. Right-click on the new project folder and select "New"->"Python Package" and name it "zombiemania" (remove the __init__.py file)
 
 3. Click on VCS (Version Control System) in the menu bar and select "Check out from version control"->"Git"
 
