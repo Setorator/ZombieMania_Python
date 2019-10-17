@@ -1,8 +1,7 @@
-import zombiemania.settings as settings
 import sys
-import pygame as pg
+import pygame
 from zombiemania.src.zombie import Zombie
-from zombiemania.src.map_builder.map import Map
+import zombiemania.src.map_builder as mb
 
 
 def main():
@@ -11,20 +10,16 @@ def main():
     velocity = v_x, v_y = [2, 2]
     black = 0, 0, 0
 
-    # Init map
-    maps = Map()
-    empty_tile = "t"
+    # Extract maps
+    maps = mb.extract_all_maps()
 
     # Init game
-    pg.init()
-    window = pg.display.set_mode(window_size)
+    pygame.init()
+    window = pygame.display.set_mode(window_size)
 
     # Init objects
     zombie = Zombie()
-    player_group = pg.sprite.Group(zombie)
-    player_group.update()
-    player_group.draw(window)
-    pg.display.flip()
+    player_group = pygame.sprite.Group(zombie)
 
     # TODO: make this a test, where it's checked that the zombie is here
     player_group.__repr__()
@@ -32,39 +27,30 @@ def main():
     # Main loop
     while True:
 
-        for event in pg.event.get():
-            if event.type == pg.QUIT:
-                pg.quit()
+        for event in pygame.event.get():
+            print(event.__repr__())
+            if event.type == pygame.QUIT:
+                pygame.quit()
                 sys.exit()
 
             # TODO: fix collision handling
-            elif event.type == pg.KEYDOWN:
-                if event.key == pg.K_RIGHT:
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RIGHT:
                     if zombie.rect.right + zombie.velocity[0] <= width:
                         zombie.velocity = (v_x, None)
                     else:
                         print("Out of right border!")
 
-            elif event.type == pg.KEYUP:
-                if event.key == pg.K_RIGHT:
+            elif event.type == pygame.KEYUP:
+                print("KEYUP")
+                if event.key == pygame.K_RIGHT:
+                    print("KEYR")
                     zombie.velocity = (0, None)
 
-        # Refresh image
         window.fill(black)
-        # Update map
-
-        for row in range(maps.map_height):
-            for column in range(maps.map_width):
-                x_pos = column*maps.tile_size
-                y_pos = row*maps.tile_size
-                tile = maps.current_level[row][column]
-                if tile is not None:
-                    rect = pg.Rect(x_pos, y_pos, maps.tile_size, maps.tile_size)
-                    window.blit(tile, rect)
-
         player_group.update()
         player_group.draw(window)
-        pg.display.flip()
+        pygame.display.flip()
 
 
 if __name__ == '__main__':
