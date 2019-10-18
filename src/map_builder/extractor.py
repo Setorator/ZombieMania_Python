@@ -1,7 +1,7 @@
 from os import path
 from glob import glob
 
-
+# TODO: merge this to Map class?
 def extract_all_maps():
     my_path = path.dirname(path.abspath(__file__))
     map_paths = glob(path.join(my_path, "..\\..\\res\\maps\\*"))
@@ -27,6 +27,7 @@ def main():
     print("Starting Map Builder")
     maps = extract_all_maps()
 
+    print(maps[0][0])
     for map in maps:
         print("MapSize: {},{}".format(len(map), len(map[0])))
 

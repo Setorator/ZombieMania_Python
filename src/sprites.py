@@ -11,7 +11,6 @@ class Sprite(pygame.sprite.Sprite):
         self._image = None
         self.rect = pygame.Rect(pos[0], pos[1], size[0], size[1])
         self._velocity = [0, 0]
-        window_size = w_width, w_height = 640, 480
 
     def update(self):
         self._index += 1

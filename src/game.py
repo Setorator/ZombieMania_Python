@@ -7,17 +7,17 @@ from zombiemania.src.map_builder.map import Map
 
 def main():
     # Game parameters
-    window_size = width, height = 640, 480
+    window_size = width, height = 800, 600
     velocity = v_x, v_y = [2, 2]
     black = 0, 0, 0
 
     # Init map
-    maps = Map()
+    game_map = Map()
     empty_tile = "t"
 
     # Init game
     pg.init()
-    window = pg.display.set_mode(window_size)
+    window = pg.display.set_mode(window_size, pg.RESIZABLE)
 
     # Init objects
     zombie = Zombie()
@@ -51,17 +51,21 @@ def main():
 
         # Refresh image
         window.fill(black)
+
         # Update map
-
-        for row in range(maps.map_height):
-            for column in range(maps.map_width):
-                x_pos = column*maps.tile_size
-                y_pos = row*maps.tile_size
-                tile = maps.current_level[row][column]
+        """
+        for row in range(game_map.map_height):
+            for column in range(game_map.map_width):
+                x_pos = column * game_map.tile_size
+                y_pos = row * game_map.tile_size
+                tile = game_map.current_level[row][column]
                 if tile is not None:
-                    rect = pg.Rect(x_pos, y_pos, maps.tile_size, maps.tile_size)
+                    rect = pg.Rect(x_pos, y_pos, game_map.tile_size, game_map.tile_size)
                     window.blit(tile, rect)
+        """
 
+        game_map.object_group.update()
+        game_map.object_group.draw(window)
         player_group.update()
         player_group.draw(window)
         pg.display.flip()
