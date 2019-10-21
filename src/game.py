@@ -1,42 +1,67 @@
-import zombiemania.settings as settings
 import sys
 import pygame as pg
+import pyscroll
+from pytmx.util_pygame import load_pygame
+
 from zombiemania.src.zombie import Zombie
-from zombiemania.src.map_builder.map import Map
+
+class Game:
+
+    def __init__(self):
+        # Init pygame
+        pg.init()
+        pg.font.init()
+        window = width, height = 800, 600
+        self.screen = pg.display.set_mode(window, pg.RESIZABLE)
+        self.tmp_surface = pg.Surface(window).convert()
+        pg.display.set_caption("Zombie Mania - It's just a flesh wound!")
+
+        # Load data from TMX-map
+        self.map_path = "../res/maps/map0.tmx"
+        tmx_data = load_pygame(self.map_path)
+        map_data = pyscroll.data.TiledMapData(tmx_data)
+
+        # Create renderer (camera)
+        # clamp_camera is used to prevent the map from scrolling past the edge
+        # TODO: Fix so that the renderer doesn't render the whole screen, only the visible
+        self.map_layer = pyscroll.BufferedRenderer(map_data,
+                                                   window,
+                                                   clamp_camera=True)
+
+        self.group = pyscroll.PyscrollGroup(map_layer=self.map_layer)
+        self.zombie = Zombie()
+        self.group.add(self.zombie)
+
+    def draw(self, surface):
+        self.group.center(self.zombie.rect.center)
+        self.group.draw(surface)
+
+    def run(self):
+        scale = pg.transform.scale
+
+        try:
+            # Update the surface and display on the screen
+            self.draw(self.tmp_surface)
+            scale(self.tmp_surface, self.screen.get_size(), self.screen)
+            pg.display.flip()
+        except:
+            pg.quit()
 
 
 def main():
     # Game parameters
-    window_size = width, height = 800, 600
-    velocity = v_x, v_y = [2, 2]
-    black = 0, 0, 0
-
-    # Init map
-    game_map = Map()
-    empty_tile = "t"
-
-    # Init game
-    pg.init()
-    window = pg.display.set_mode(window_size, pg.RESIZABLE)
-
-    # Init objects
-    zombie = Zombie()
-    player_group = pg.sprite.Group(zombie)
-    player_group.update()
-    player_group.draw(window)
-    pg.display.flip()
-
-    # TODO: make this a test, where it's checked that the zombie is here
-    player_group.__repr__()
+    game = Game()
 
     # Main loop
     while True:
-
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
                 sys.exit()
 
+        game.run()
+
+        """
             # TODO: fix collision handling
             elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_RIGHT:
@@ -51,7 +76,7 @@ def main():
 
         # Refresh image
         window.fill(black)
-
+        """
         # Update map
         """
         for row in range(game_map.map_height):
@@ -63,13 +88,6 @@ def main():
                     rect = pg.Rect(x_pos, y_pos, game_map.tile_size, game_map.tile_size)
                     window.blit(tile, rect)
         """
-
-        game_map.object_group.update()
-        game_map.object_group.draw(window)
-        player_group.update()
-        player_group.draw(window)
-        pg.display.flip()
-
 
 if __name__ == '__main__':
     main()
