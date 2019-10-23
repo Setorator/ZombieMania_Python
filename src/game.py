@@ -1,56 +1,87 @@
 import sys
-import pygame
+import pygame as pg
+import pyscroll
+from pytmx.util_pygame import load_pygame
+
 from zombiemania.src.zombie import Zombie
-import zombiemania.src.map_builder as mb
+
+
+class Game:
+
+    def __init__(self):
+        # Init pygame
+        pg.init()
+        pg.font.init()
+        window = width, height = 800, 600
+        self.screen = pg.display.set_mode(window, pg.RESIZABLE)
+        self.tmp_surface = pg.Surface(window).convert()
+        pg.display.set_caption("Zombie Mania - It's just a flesh wound!")
+
+        # Load data from TMX-map
+        self.map_path = "../res/maps/map0.tmx"
+        tmx_data = load_pygame(self.map_path)
+        map_data = pyscroll.data.TiledMapData(tmx_data)
+
+        # Create renderer (camera)
+        # clamp_camera is used to prevent the map from scrolling past the edge
+        # TODO: Fix so that the renderer doesn't render the whole screen, only the visible
+        self.map_layer = pyscroll.BufferedRenderer(map_data,
+                                                   (width, height),
+                                                   clamp_camera=True)
+
+        self.group = pyscroll.PyscrollGroup(map_layer=self.map_layer)
+        self.zombie = Zombie()
+        self.group.add(self.zombie)
+
+    def draw(self, surface):
+        """
+        Used to redraw all the objects in the game, including
+        map, zombie and enemies
+        :param surface: The surface on which to redraw the objects
+        """
+
+        self.group.center(self.zombie.rect.center)
+        self.group.draw(surface)
+
+    def run(self):
+        """
+        Updates the system 1 tick by updating objects positions and
+        redrawing them.
+        """
+
+        scale = pg.transform.scale
+        try:
+            # Update the surface and display on the screen
+            self.group.update()
+            self.draw(self.tmp_surface)
+            scale(self.tmp_surface, self.screen.get_size(), self.screen)
+            pg.display.flip()
+        except:
+            pg.quit()
 
 
 def main():
     # Game parameters
-    window_size = width, height = 640, 480
-    velocity = v_x, v_y = [2, 2]
-    black = 0, 0, 0
+    game = Game()
 
-    # Extract maps
-    maps = mb.extract_all_maps()
-
-    # Init game
-    pygame.init()
-    window = pygame.display.set_mode(window_size)
-
-    # Init objects
-    zombie = Zombie()
-    player_group = pygame.sprite.Group(zombie)
-
-    # TODO: make this a test, where it's checked that the zombie is here
-    player_group.__repr__()
-
-    # Main loop
+    # Main loop which should create a clock used for the game-ticks
+    # TODO: fix a clock for updating the game with a fixed frequency
     while True:
-
-        for event in pygame.event.get():
-            print(event.__repr__())
-            if event.type == pygame.QUIT:
-                pygame.quit()
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                pg.quit()
                 sys.exit()
 
-            # TODO: fix collision handling
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RIGHT:
-                    if zombie.rect.right + zombie.velocity[0] <= width:
-                        zombie.velocity = (v_x, None)
-                    else:
-                        print("Out of right border!")
+            # TODO: Move collision handling to the update() of the Game-class.
+            elif event.type == pg.KEYDOWN:
+                if event.key == pg.K_RIGHT:
+                    game.zombie.velocity = (2, None)
 
-            elif event.type == pygame.KEYUP:
-                print("KEYUP")
-                if event.key == pygame.K_RIGHT:
-                    print("KEYR")
-                    zombie.velocity = (0, None)
+            elif event.type == pg.KEYUP:
+                if event.key == pg.K_RIGHT:
+                    game.zombie.velocity = (0, None)
 
-        window.fill(black)
-        player_group.update()
-        player_group.draw(window)
-        pygame.display.flip()
+        game.run()
 
 
 if __name__ == '__main__':
