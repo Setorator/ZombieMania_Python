@@ -5,6 +5,7 @@ from pytmx.util_pygame import load_pygame
 
 from zombiemania.src.zombie import Zombie
 
+
 class Game:
 
     def __init__(self):
@@ -25,7 +26,7 @@ class Game:
         # clamp_camera is used to prevent the map from scrolling past the edge
         # TODO: Fix so that the renderer doesn't render the whole screen, only the visible
         self.map_layer = pyscroll.BufferedRenderer(map_data,
-                                                   window,
+                                                   (width, height),
                                                    clamp_camera=True)
 
         self.group = pyscroll.PyscrollGroup(map_layer=self.map_layer)
@@ -33,14 +34,25 @@ class Game:
         self.group.add(self.zombie)
 
     def draw(self, surface):
+        """
+        Used to redraw all the objects in the game, including
+        map, zombie and enemies
+        :param surface: The surface on which to redraw the objects
+        """
+
         self.group.center(self.zombie.rect.center)
         self.group.draw(surface)
 
     def run(self):
-        scale = pg.transform.scale
+        """
+        Updates the system 1 tick by updating objects positions and
+        redrawing them.
+        """
 
+        scale = pg.transform.scale
         try:
             # Update the surface and display on the screen
+            self.group.update()
             self.draw(self.tmp_surface)
             scale(self.tmp_surface, self.screen.get_size(), self.screen)
             pg.display.flip()
@@ -52,42 +64,25 @@ def main():
     # Game parameters
     game = Game()
 
-    # Main loop
+    # Main loop which should create a clock used for the game-ticks
+    # TODO: fix a clock for updating the game with a fixed frequency
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
                 sys.exit()
 
-        game.run()
-
-        """
-            # TODO: fix collision handling
+            # TODO: Move collision handling to the update() of the Game-class.
             elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_RIGHT:
-                    if zombie.rect.right + zombie.velocity[0] <= width:
-                        zombie.velocity = (v_x, None)
-                    else:
-                        print("Out of right border!")
+                    game.zombie.velocity = (2, None)
 
             elif event.type == pg.KEYUP:
                 if event.key == pg.K_RIGHT:
-                    zombie.velocity = (0, None)
+                    game.zombie.velocity = (0, None)
 
-        # Refresh image
-        window.fill(black)
-        """
-        # Update map
-        """
-        for row in range(game_map.map_height):
-            for column in range(game_map.map_width):
-                x_pos = column * game_map.tile_size
-                y_pos = row * game_map.tile_size
-                tile = game_map.current_level[row][column]
-                if tile is not None:
-                    rect = pg.Rect(x_pos, y_pos, game_map.tile_size, game_map.tile_size)
-                    window.blit(tile, rect)
-        """
+        game.run()
+
 
 if __name__ == '__main__':
     main()

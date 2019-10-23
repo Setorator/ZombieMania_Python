@@ -2,8 +2,12 @@ import pygame
 import glob
 
 
-# TODO: Create a move function
 class Sprite(pygame.sprite.Sprite):
+    """
+    The main class of every sprite in the game This class is needed to be able
+    to create moving images for the sprites, since the pygame.sprite class
+    doesn't support gifs.
+    """
     def __init__(self, pos=(100, 100), size=(64, 64)):
         super(Sprite, self).__init__()
         self._images = []
@@ -12,7 +16,11 @@ class Sprite(pygame.sprite.Sprite):
         self.rect = pygame.Rect(pos[0], pos[1], size[0], size[1])
         self._velocity = [0, 0]
 
+    # TODO: make a "draw" function instead
     def update(self):
+        """
+        Simple update function which rotates the images of the sprite.
+        """
         self._index += 1
         if self._index >= len(self._images):
             self._index = 0
@@ -20,11 +28,17 @@ class Sprite(pygame.sprite.Sprite):
         self.move()
 
     def move(self):
-        # This method should be overloaded by others who want different movements
+        """
+        Simple move function for the sprites, should be overridden by subclasses
+        who wants different movements
+        """
         self.rect.move_ip(self._velocity[0], self._velocity[1])
 
-
     def load_images(self, folder_path):
+        """
+        Loads the images for a sprite and saves them in the internal image-list
+        :param folder_path: Path to the folder where the images reside
+        """
         paths = glob.glob(folder_path, recursive=True)
         if len(paths) > 0:
             for path in paths:
@@ -33,7 +47,6 @@ class Sprite(pygame.sprite.Sprite):
 
     @property
     def image(self):
-        #print("Getting face for {}".format(self.__repr__()))
         return self._image
 
     @image.setter
