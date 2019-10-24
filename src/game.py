@@ -9,25 +9,28 @@ from zombiemania.src.zombie import Zombie
 class Game:
 
     def __init__(self):
-        # Init pygame
+        # Init game parameters
         pg.init()
         pg.font.init()
         window = width, height = 800, 600
         self.screen = pg.display.set_mode(window, pg.RESIZABLE)
         self.tmp_surface = pg.Surface(window).convert()
         pg.display.set_caption("Zombie Mania - It's just a flesh wound!")
+        self.background = pg.image.load("../res/img/background.gif").convert()
 
         # Load data from TMX-map
         self.map_path = "../res/maps/map0.tmx"
         tmx_data = load_pygame(self.map_path)
-        map_data = pyscroll.data.TiledMapData(tmx_data)
+        self.meta_objects = tmx_data.visible_layers
+        self.map_data = pyscroll.data.TiledMapData(tmx_data)
 
         # Create renderer (camera)
         # clamp_camera is used to prevent the map from scrolling past the edge
         # TODO: Fix so that the renderer doesn't render the whole screen, only the visible
-        self.map_layer = pyscroll.BufferedRenderer(map_data,
+        self.map_layer = pyscroll.BufferedRenderer(self.map_data,
                                                    (width, height),
-                                                   clamp_camera=True)
+                                                   clamp_camera=True,
+                                                   alpha=True)
 
         self.group = pyscroll.PyscrollGroup(map_layer=self.map_layer)
         self.zombie = Zombie()
@@ -39,6 +42,9 @@ class Game:
         map, zombie and enemies
         :param surface: The surface on which to redraw the objects
         """
+
+        # Render background
+        pg.transform.scale(self.background, surface.get_size(), surface)
 
         self.group.center(self.zombie.rect.center)
         self.group.draw(surface)
@@ -61,6 +67,7 @@ class Game:
 
 
 def main():
+
     # Game parameters
     game = Game()
 
