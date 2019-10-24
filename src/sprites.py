@@ -1,5 +1,6 @@
 import pygame
-import glob
+
+from zombiemania.settings import load_images
 
 
 class Sprite(pygame.sprite.Sprite):
@@ -34,16 +35,16 @@ class Sprite(pygame.sprite.Sprite):
         """
         self.rect.move_ip(self._velocity[0], self._velocity[1])
 
-    def load_images(self, folder_path):
+
+    def load_images(self, texture):
         """
         Loads the images for a sprite and saves them in the internal image-list
-        :param folder_path: Path to the folder where the images reside
+        (Internally uses the global load_images from settings.py
+        :param texture: A string representing the texture to load images from
         """
-        paths = glob.glob(folder_path, recursive=True)
-        if len(paths) > 0:
-            for path in paths:
-                self._images.append(pygame.image.load(path))
-            self._image = self._images[0]
+
+        self._images = load_images(texture)
+        self._image = self._images[0]
 
     @property
     def image(self):

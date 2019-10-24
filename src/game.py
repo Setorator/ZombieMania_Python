@@ -3,6 +3,7 @@ import pygame as pg
 import pyscroll
 from pytmx.util_pygame import load_pygame
 
+from zombiemania.settings import load_images
 from zombiemania.src.zombie import Zombie
 
 
@@ -16,7 +17,8 @@ class Game:
         self.screen = pg.display.set_mode(window, pg.RESIZABLE)
         self.tmp_surface = pg.Surface(window).convert()
         pg.display.set_caption("Zombie Mania - It's just a flesh wound!")
-        self.background = pg.image.load("../res/img/background.gif").convert()
+
+        self.background = load_images("BACKGROUND")
 
         # Load data from TMX-map
         self.map_path = "../res/maps/map0.tmx"
@@ -43,8 +45,9 @@ class Game:
         :param surface: The surface on which to redraw the objects
         """
 
-        # Render background
-        pg.transform.scale(self.background, surface.get_size(), surface)
+        # Render first background image then rotate the background animation
+        pg.transform.scale(self.background[0], surface.get_size(), surface)
+        self.background = self.background[1:] + self.background[:1]
 
         self.group.center(self.zombie.rect.center)
         self.group.draw(surface)

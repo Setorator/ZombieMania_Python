@@ -1,7 +1,8 @@
-from zombiemania.src.sprites import Sprite
 from os import path
 
-w_width, w_height = 640, 480
+from zombiemania.src.sprites import Sprite
+
+w_width, w_height = 800, 600
 
 
 class Zombie(Sprite):
@@ -10,9 +11,7 @@ class Zombie(Sprite):
     """
     def __init__(self):
         super(Zombie, self).__init__(size=(48, 63))
-        my_path = path.dirname(path.abspath(__file__))
-        img_path = path.join(my_path, "..\\res\\img\\zombielookright\\*")
-        self.load_images(img_path)
+        self.load_images("ZOMBIE")
 
     def move(self):
         """
