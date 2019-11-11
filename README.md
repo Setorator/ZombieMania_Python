@@ -60,7 +60,7 @@ Todo
 
 ## Authors
 
-* **Kim Larsson** - *Creator* - [Setorator](https://github.com/Setorator)
+* **Kim Askling** - *Creator* - [Setorator](https://github.com/Setorator)
 * **Linus Sjölinder** - *Initial Work* - [Sjoelinder](https://github.com/sjoelinder)
 * **Alexander Andreasson** - *Something* - [TBD]()
 * **Elias Fredin** - *Initial Work* - [Bravos123](https://github.com/Bravos123)
