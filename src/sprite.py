@@ -26,10 +26,10 @@ class Sprite(pygame.sprite.Sprite):
                                 self.position[1],
                                 size[0],
                                 size[1])
-        self.hitbox = pygame.Rect(self.position[0],
-                                  self.position[1],
-                                  self.rect.width * .5,
-                                  self.rect.height * .5)
+        self.hitbox = pygame.Rect(self.rect.x + self.rect.width * 0.2,
+                                  self.rect.y + self.rect.height * 0.2,
+                                  self.rect.width * .6,
+                                  self.rect.height * .6)
 
     def draw(self):
         """

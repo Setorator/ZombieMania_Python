@@ -33,7 +33,6 @@ class Game:
                 pos = (obs[0] * BLOCK_SIZE, obs[1] * BLOCK_SIZE)
                 tmp_rect = pg.Rect(pos, (BLOCK_SIZE, BLOCK_SIZE))
                 self.obstacles.append(tmp_rect)
-                print("Added rect: " + tmp_rect.__str__())
 
         # Create renderer (camera)
         # clamp_camera is used to prevent the map from scrolling past the edge
