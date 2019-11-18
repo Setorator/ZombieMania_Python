@@ -73,6 +73,7 @@ def main():
 
     # Game parameters
     game = Game()
+    clock = pg.time.Clock()
 
     # Main loop which should create a clock used for the game-ticks
     # TODO: fix a clock for updating the game with a fixed frequency
@@ -85,13 +86,14 @@ def main():
             # TODO: Move collision handling to the update() of the Game-class.
             elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_RIGHT:
-                    game.zombie.velocity = (2, None)
+                    game.zombie.velocity = (10, None)
 
             elif event.type == pg.KEYUP:
                 if event.key == pg.K_RIGHT:
                     game.zombie.velocity = (0, None)
 
         game.run()
+        clock.tick(30)
 
 
 if __name__ == '__main__':

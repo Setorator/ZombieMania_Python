@@ -1,6 +1,5 @@
-from os import path
 
-from zombiemania.src.sprites import Sprite
+from zombiemania.src.sprite import Sprite
 
 w_width, w_height = 800, 600
 

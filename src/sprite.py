@@ -16,16 +16,22 @@ class Sprite(pygame.sprite.Sprite):
         self._image = None
         self.rect = pygame.Rect(pos[0], pos[1], size[0], size[1])
         self._velocity = [0, 0]
+        self.face_delay = 5
 
     # TODO: make a "draw" function instead
     def update(self):
         """
         Simple update function which rotates the images of the sprite.
         """
-        self._index += 1
-        if self._index >= len(self._images):
-            self._index = 0
-        self._image = self._images[self._index]
+        if self.face_delay == 0:
+            self.face_delay = 5
+            self._index += 1
+            if self._index >= len(self._images):
+                self._index = 0
+            self._image = self._images[self._index]
+        else:
+            self.face_delay -= 1
+
         self.move()
 
     def move(self):
