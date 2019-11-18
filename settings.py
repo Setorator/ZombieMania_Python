@@ -5,6 +5,8 @@ from pygame import image
 ROOT_DIR = path.dirname(path.abspath(__file__))
 IMG_DIR = glob(ROOT_DIR + "\\**\\img")[0]
 
+BLOCK_SIZE = 64
+
 EMPTY = "t"
 GRASS = "g"
 DIRT = "d"

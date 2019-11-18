@@ -3,7 +3,7 @@ import pygame as pg
 import pyscroll
 from pytmx.util_pygame import load_pygame
 
-from zombiemania.settings import load_images
+from zombiemania.settings import load_images, BLOCK_SIZE
 from zombiemania.src.zombie import Zombie
 
 
@@ -23,8 +23,17 @@ class Game:
         # Load data from TMX-map
         self.map_path = "../res/maps/map0.tmx"
         tmx_data = load_pygame(self.map_path)
-        self.meta_objects = tmx_data.visible_layers # TODO: Needed?
+        self.meta_objects = tmx_data.visible_layers  # TODO: Needed?
         self.map_data = pyscroll.data.TiledMapData(tmx_data)
+
+        # Add static obstacles to a dict for easy collision checking
+        self.obstacles = []
+        for obs in tmx_data.get_layer_by_name("Map"):
+            if obs[2] != 0:
+                pos = (obs[0] * BLOCK_SIZE, obs[1] * BLOCK_SIZE)
+                tmp_rect = pg.Rect(pos, (BLOCK_SIZE, BLOCK_SIZE))
+                self.obstacles.append(tmp_rect)
+                print("Added rect: " + tmp_rect.__str__())
 
         # Create renderer (camera)
         # clamp_camera is used to prevent the map from scrolling past the edge
@@ -53,28 +62,24 @@ class Game:
         self.group.draw(surface)
 
     def collisions(self):
-        for obj in self.group:
-            print(obj)
-
-    def update(self):
-        """
-        Update the games environment as well as the player and enemies in it
-        """
-        self.group.update()
+        for sprite in self.group.sprites():
+            if sprite.hitbox.collidelist(self.obstacles) > -1:
+                sprite.move_back()
 
     def run(self):
         """
         Updates the system 1 tick by updating objects positions and redrawing
         them.
         """
-
         scale = pg.transform.scale
         try:
             # Update the surface and display on the screen
-            self.update()
+            self.group.update()
+            self.collisions()
             self.draw(self.tmp_surface)
             scale(self.tmp_surface, self.screen.get_size(), self.screen)
             pg.display.flip()
+
         except:
             pg.quit()
 
@@ -102,6 +107,7 @@ def main():
                 elif event.key == pg.K_DOWN:
                     game.zombie.velocity = (None, 10)
 
+            # TODO: Improve movements (order: L_DOWN - R_DOWN - L_UP makes the zombie stop)
             elif event.type == pg.KEYUP:
                 if event.key == pg.K_RIGHT or event.key == pg.K_LEFT:
                     game.zombie.velocity = (0, None)

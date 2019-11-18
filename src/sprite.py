@@ -9,14 +9,27 @@ class Sprite(pygame.sprite.Sprite):
     to create moving images for the sprites, since the pygame.sprite class
     doesn't support gifs.
     """
-    def __init__(self, pos=(100, 100), size=(64, 64)):
+    def __init__(self, pos=(300, 200), size=(64, 64)):
         super(Sprite, self).__init__()
+
+        # Members for image handling
         self._images = []
         self._index = 0
         self._image = None
-        self.rect = pygame.Rect(pos[0], pos[1], size[0], size[1])
-        self._velocity = [0, 0]
         self.face_delay = 5
+
+        # Members for positioning of the sprite
+        self._velocity = [0, 0]
+        self._position = [pos[0], pos[1]]
+        self._old_position = self.position
+        self.rect = pygame.Rect(self.position[0],
+                                self.position[1],
+                                size[0],
+                                size[1])
+        self.hitbox = pygame.Rect(self.position[0],
+                                  self.position[1],
+                                  self.rect.width * .5,
+                                  self.rect.height * .5)
 
     def draw(self):
         """
@@ -33,23 +46,34 @@ class Sprite(pygame.sprite.Sprite):
         else:
             self._index = 0
 
-        self._image = self._images[self._index]
+        self.image = self._images[self._index]
 
     def update(self):
         """
         Simple update function calls methods for updating face and position
         """
-
-
-        self.draw()
         self.move()
+        self.draw()
 
     def move(self):
         """
         Simple move function for the sprites, should be overridden by subclasses
         who wants different movements
         """
-        self.rect.move_ip(self._velocity[0], self._velocity[1])
+        self._old_position = self.position[:]
+        self.position[0] += self.velocity[0]
+        self.position[1] += self.velocity[1]
+        self.rect.topleft = self.position
+        self.hitbox.midbottom = self.rect.midbottom
+
+    def move_back(self):
+        """
+        Used for when a collision is detected and the sprite's movement
+        is reversed
+        """
+        self.position = self._old_position
+        self.rect.topleft = self.position
+        self.hitbox.midbottom = self.rect.midbottom
 
     def load_images(self, texture):
         """
@@ -59,31 +83,39 @@ class Sprite(pygame.sprite.Sprite):
         """
 
         self._images = load_images(texture)
-        self._image = self._images[0]
+        self.image = self._images[0]
 
     @property
     def image(self):
         return self._image
 
     @image.setter
-    def image(self, img):
-        if not img:
+    def image(self, value):
+        if not value:
             raise ValueError("No valid image for face!")
-        print("Setting face for {}".format(self.__repr__()))
-        self._image = img
+        self._image = value
 
     @property
     def velocity(self):
         return self._velocity
 
     @velocity.setter
-    def velocity(self, d_vec):
-        """
-        Changes the velocity of the sprite
-        :param d_vec[0]: Change in x-direction (positive right)
-        :param d_vec[1]: Change in y-direction (positive down)
-        """
-        if d_vec[0] is not None:
-            self._velocity[0] = d_vec[0]
-        if d_vec[1] is not None:
-            self._velocity[1] = d_vec[1]
+    def velocity(self, value):
+        if len(value) == 2:
+            if value[0] is not None:
+                self._velocity[0] = value[0]
+            if value[1] is not None:
+                self._velocity[1] = value[1]
+        else:
+            raise ValueError("Wrong format for sprite velocity")
+
+    @property
+    def position(self):
+        return self._position
+
+    @position.setter
+    def position(self, value):
+        if len(value) == 2:
+            self._position = list(value)
+        else:
+            raise ValueError("Wrong format for sprite position")
