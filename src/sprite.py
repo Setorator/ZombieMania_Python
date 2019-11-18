@@ -18,20 +18,30 @@ class Sprite(pygame.sprite.Sprite):
         self._velocity = [0, 0]
         self.face_delay = 5
 
-    # TODO: make a "draw" function instead
+    def draw(self):
+        """
+        Re-draws the sprite, i.e. updating face etc.
+        """
+        if self._velocity[0] != 0:
+            if self.face_delay == 0:
+                self.face_delay = 5
+                self._index += 1
+                if self._index >= len(self._images):
+                    self._index = 0
+            else:
+                self.face_delay -= 1
+        else:
+            self._index = 0
+
+        self._image = self._images[self._index]
+
     def update(self):
         """
-        Simple update function which rotates the images of the sprite.
+        Simple update function calls methods for updating face and position
         """
-        if self.face_delay == 0:
-            self.face_delay = 5
-            self._index += 1
-            if self._index >= len(self._images):
-                self._index = 0
-            self._image = self._images[self._index]
-        else:
-            self.face_delay -= 1
 
+
+        self.draw()
         self.move()
 
     def move(self):
@@ -40,7 +50,6 @@ class Sprite(pygame.sprite.Sprite):
         who wants different movements
         """
         self.rect.move_ip(self._velocity[0], self._velocity[1])
-
 
     def load_images(self, texture):
         """
@@ -70,10 +79,9 @@ class Sprite(pygame.sprite.Sprite):
     @velocity.setter
     def velocity(self, d_vec):
         """
-        # TODO: rewrite to match behaviour
         Changes the velocity of the sprite
-        :param dx: Change in x-direction (positive right)
-        :param dy: Change in y-direction (positive down)
+        :param d_vec[0]: Change in x-direction (positive right)
+        :param d_vec[1]: Change in y-direction (positive down)
         """
         if d_vec[0] is not None:
             self._velocity[0] = d_vec[0]

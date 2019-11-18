@@ -23,7 +23,7 @@ class Game:
         # Load data from TMX-map
         self.map_path = "../res/maps/map0.tmx"
         tmx_data = load_pygame(self.map_path)
-        self.meta_objects = tmx_data.visible_layers
+        self.meta_objects = tmx_data.visible_layers # TODO: Needed?
         self.map_data = pyscroll.data.TiledMapData(tmx_data)
 
         # Create renderer (camera)
@@ -52,16 +52,26 @@ class Game:
         self.group.center(self.zombie.rect.center)
         self.group.draw(surface)
 
+    def collisions(self):
+        for obj in self.group:
+            print(obj)
+
+    def update(self):
+        """
+        Update the games environment as well as the player and enemies in it
+        """
+        self.group.update()
+
     def run(self):
         """
-        Updates the system 1 tick by updating objects positions and
-        redrawing them.
+        Updates the system 1 tick by updating objects positions and redrawing
+        them.
         """
 
         scale = pg.transform.scale
         try:
             # Update the surface and display on the screen
-            self.group.update()
+            self.update()
             self.draw(self.tmp_surface)
             scale(self.tmp_surface, self.screen.get_size(), self.screen)
             pg.display.flip()
@@ -76,21 +86,27 @@ def main():
     clock = pg.time.Clock()
 
     # Main loop which should create a clock used for the game-ticks
-    # TODO: fix a clock for updating the game with a fixed frequency
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
                 sys.exit()
 
-            # TODO: Move collision handling to the update() of the Game-class.
             elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_RIGHT:
                     game.zombie.velocity = (10, None)
+                elif event.key == pg.K_LEFT:
+                    game.zombie.velocity = (-10, None)
+                elif event.key == pg.K_UP:
+                    game.zombie.velocity = (None, -10)
+                elif event.key == pg.K_DOWN:
+                    game.zombie.velocity = (None, 10)
 
             elif event.type == pg.KEYUP:
-                if event.key == pg.K_RIGHT:
+                if event.key == pg.K_RIGHT or event.key == pg.K_LEFT:
                     game.zombie.velocity = (0, None)
+                elif event.key == pg.K_UP or event.key == pg.K_DOWN:
+                    game.zombie.velocity = (None, 0)
 
         game.run()
         clock.tick(30)
