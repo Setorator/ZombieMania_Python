@@ -6,6 +6,7 @@ ROOT_DIR = path.dirname(path.abspath(__file__))
 IMG_DIR = glob(ROOT_DIR + "\\**\\img")[0]
 
 BLOCK_SIZE = 64
+W_SIZE = WIDTH, HEIGHT = 1000, 600
 
 EMPTY = "t"
 GRASS = "g"
@@ -41,6 +42,6 @@ def load_images(texture):
     images = []
     if len(paths) > 0:
         for tmp_path in paths:
-            images.append(image.load(tmp_path).convert())
+            images.append(image.load(tmp_path).convert_alpha())
 
     return images

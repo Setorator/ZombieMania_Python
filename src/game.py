@@ -3,7 +3,7 @@ import pygame as pg
 import pyscroll
 from pytmx.util_pygame import load_pygame
 
-from zombiemania.settings import load_images, BLOCK_SIZE
+from zombiemania.settings import load_images, BLOCK_SIZE, W_SIZE
 from zombiemania.src.zombie import Zombie
 
 
@@ -13,22 +13,21 @@ class Game:
         # Init game parameters
         pg.init()
         pg.font.init()
-        window = width, height = 800, 600
-        self.screen = pg.display.set_mode(window, pg.RESIZABLE)
-        self.tmp_surface = pg.Surface(window).convert()
+        self.screen = pg.display.set_mode(W_SIZE, pg.RESIZABLE)
+        self.tmp_surface = pg.Surface(W_SIZE).convert()
         pg.display.set_caption("Zombie Mania - It's just a flesh wound!")
 
         self.background = load_images("BACKGROUND")
 
         # Load data from TMX-map
         self.map_path = "../res/maps/map0.tmx"
-        tmx_data = load_pygame(self.map_path)
-        self.meta_objects = tmx_data.visible_layers  # TODO: Needed?
-        self.map_data = pyscroll.data.TiledMapData(tmx_data)
+        self.tmx_data = load_pygame(self.map_path)
+        self.map_data = pyscroll.data.TiledMapData(self.tmx_data)
+        #self.misc_layer = self.tmx_data.layernames["Misc"]
 
         # Add static obstacles to a dict for easy collision checking
         self.obstacles = []
-        for obs in tmx_data.get_layer_by_name("Map"):
+        for obs in self.tmx_data.get_layer_by_name("Map"):
             if obs[2] != 0:
                 pos = (obs[0] * BLOCK_SIZE, obs[1] * BLOCK_SIZE)
                 tmp_rect = pg.Rect(pos, (BLOCK_SIZE, BLOCK_SIZE))
@@ -38,9 +37,10 @@ class Game:
         # clamp_camera is used to prevent the map from scrolling past the edge
         # TODO: Fix so that the renderer doesn't render the whole screen, only the visible
         self.map_layer = pyscroll.BufferedRenderer(self.map_data,
-                                                   (width, height),
+                                                   W_SIZE,
                                                    clamp_camera=True,
-                                                   alpha=True)
+                                                   alpha=True,
+                                                   tall_sprites=1)
 
         self.group = pyscroll.PyscrollGroup(map_layer=self.map_layer)
         self.zombie = Zombie()
