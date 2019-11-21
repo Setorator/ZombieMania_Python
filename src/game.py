@@ -98,21 +98,23 @@ def main():
 
             elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_RIGHT:
-                    game.zombie.velocity = (10, None)
+                    game.zombie.velocity[0] += 10
                 elif event.key == pg.K_LEFT:
-                    game.zombie.velocity = (-10, None)
+                    game.zombie.velocity[0] += -10
                 elif event.key == pg.K_UP:
-                    game.zombie.velocity = (None, -10)
+                    game.zombie.velocity[1] += -10
                 elif event.key == pg.K_DOWN:
-                    game.zombie.velocity = (None, 10)
+                    game.zombie.velocity[1] += 10
 
-            # TODO: Improve movements (order: L_DOWN - R_DOWN - L_UP makes the zombie stop)
             elif event.type == pg.KEYUP:
-                if event.key == pg.K_RIGHT or event.key == pg.K_LEFT:
-                    game.zombie.velocity = (0, None)
-                elif event.key == pg.K_UP or event.key == pg.K_DOWN:
-                    game.zombie.velocity = (None, 0)
-
+                if event.key == pg.K_RIGHT:
+                    game.zombie.velocity[0] -= 10
+                elif event.key == pg.K_LEFT:
+                    game.zombie.velocity[0] -= -10
+                elif event.key == pg.K_UP:
+                    game.zombie.velocity[1] -= -10
+                elif event.key == pg.K_DOWN:
+                    game.zombie.velocity[1] -= 10
         game.run()
         clock.tick(30)
 
