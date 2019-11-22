@@ -49,6 +49,9 @@ Finally try to run the game from the file ``` src/game.py ``` and then get hacki
 ## Built With
 
 * [Pygame](https://www.pygame.org) - A cross-platform set of Python modules designed for writing video games
+* [Tiled](https://www.mapeditor.org/) - A map editor for creating tiled maps in the TMX-format.
+* [PyTMX](https://github.com/bitcraft/pytmx) - A library for reading TMX maps created in the Tiled map editor.
+* [pyscroll](https://github.com/bitcraft/pyscroll) - A module for creating animated scrolling maps.
 
 ## Contributing
 
