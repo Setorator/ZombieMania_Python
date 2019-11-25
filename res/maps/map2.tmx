@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.2" tiledversion="1.2.5" orientation="orthogonal" renderorder="left-up" width="150" height="10" tilewidth="64" tileheight="64" infinite="0" nextlayerid="3" nextobjectid="1">
+ <tileset firstgid="1" source="tileset.tsx"/>
+ <tileset firstgid="13" source="high_tileset.tsx"/>
+ <layer id="1" name="Map" width="150" height="10">
+  <data encoding="base64" compression="zlib">
+   eJztlt0OgCAIhVnT9+z9n6J1lRIWY5ho59u4MZx/JzhEcUiGWJVMtK98PjAG6Ar0ALpqY+1Vf++BJ9CVTPn+mQW/L4tmyjxNfrl+bzz+Bejqztf+O5Lf91obuqqJ3qd67s9T19DVhUdNGFVPnvI14941c2VdcX9EVHsk7pk099b6Js2XfFkS5ljOpHlr7bhFU297n11XGyJ0zMoBH4kHiA==
+  </data>
+ </layer>
+ <layer id="2" name="Misc" width="150" height="10">
+  <data encoding="base64" compression="zlib">
+   eJztzjENAAAIA7AZwL9dHOwlJK2CJgAAAAA/zHUAAIoFbfgADg==
+  </data>
+ </layer>
+</map>
