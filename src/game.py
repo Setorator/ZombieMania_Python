@@ -106,8 +106,6 @@ def main():
                     game.zombie.velocity[0] += -10
                 elif event.key == pg.K_UP:
                     game.zombie.velocity[1] += -10
-                elif event.key == pg.K_DOWN:
-                    game.zombie.velocity[1] += 10
 
             elif event.type == pg.KEYUP:
                 if event.key == pg.K_RIGHT:
@@ -116,8 +114,7 @@ def main():
                     game.zombie.velocity[0] -= -10
                 elif event.key == pg.K_UP:
                     game.zombie.velocity[1] -= -10
-                elif event.key == pg.K_DOWN:
-                    game.zombie.velocity[1] -= 10
+                
         game.run()
         clock.tick(30)
 
