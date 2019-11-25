@@ -29,8 +29,8 @@ class Sprite(pygame.sprite.Sprite):
                                 size[1])
         self.hitbox = pygame.Rect(self.rect.x + self.rect.width * 0.2,
                                   self.rect.y + self.rect.height * 0.2,
-                                  self.rect.width * .6,
-                                  self.rect.height * .6)
+                                  self.rect.width * .8,
+                                  self.rect.height * .8)
 
     def draw(self):
         """

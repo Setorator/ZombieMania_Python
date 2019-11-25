@@ -53,9 +53,3 @@ class Zombie(Sprite):
 
         self.rect.topleft = self.position
         self.hitbox.midbottom = self.rect.midbottom
-
-        """
-        move back one direction at a time
-        if collision gone, no probs
-        otherwise move the other direction
-        """
