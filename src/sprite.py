@@ -22,6 +22,7 @@ class Sprite(pygame.sprite.Sprite):
         self._velocity = [0, 0]
         self._position = [pos[0], pos[1]]
         self._old_position = self.position
+        self._jumping = "FALLING"
         self.rect = pygame.Rect(self.position[0],
                                 self.position[1],
                                 size[0],
@@ -66,7 +67,7 @@ class Sprite(pygame.sprite.Sprite):
         self.rect.topleft = self.position
         self.hitbox.midbottom = self.rect.midbottom
 
-    def move_back(self):
+    def move_back(self, vertical=False):
         """
         Used for when a collision is detected and the sprite's movement
         is reversed
@@ -119,3 +120,14 @@ class Sprite(pygame.sprite.Sprite):
             self._position = list(value)
         else:
             raise ValueError("Wrong format for sprite position")
+
+    @property
+    def jumping(self):
+        return self._jumping
+
+    @jumping.setter
+    def jumping(self, value):
+        if value == "FALLING" or value == "GROUND" or value == "UPWARD":
+            self._jumping = value
+        else:
+            raise ValueError("Invalid value for 'jumping': {}".format(value))

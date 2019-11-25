@@ -62,8 +62,11 @@ class Game:
 
     def collisions(self):
         for sprite in self.group.sprites():
+            # First move back vertically, then horizontally
             if sprite.hitbox.collidelist(self.obstacles) > -1:
-                sprite.move_back()
+                sprite.move_back(vertical=False)
+                if sprite.hitbox.collidelist(self.obstacles) > -1:
+                    sprite.move_back(vertical=True)
 
     def run(self):
         """
